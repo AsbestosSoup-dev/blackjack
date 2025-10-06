@@ -1,0 +1,54 @@
+# Rust build directory
+/target/
+
+# IDE specific files
+.idea/
+.vscode/
+*.iml
+*.iws
+.DS_Store
+
+# Debug files
+**/*.rs.bk
+
+# Environment files
+.env
+.env.local
+
+# Generated documentation
+/doc/
+
+# Binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Debug symbols
+*.pdb
+
+# Rust profiling and debugging
+*.profraw
+perf.data
+perf.data.old
+flamegraph.svg
+
+# Backup files
+*~
+*.bak
+*.swp
+*.swo
+
+# OS specific
+Thumbs.db
+desktop.ini
+
+# Test coverage
+coverage/
+*.lcov
+
+# CTags/ETags
+tags
+TAGS
+.tags
+.tags*
