@@ -1,4 +1,4 @@
-    # 🃏 Blackjack
+# 🃏 Blackjack
 
 A cross-platform, terminal-based multiplayer blackjack game written in **Rust**.  
 Play solo, with bots, or over LAN/WAN — all through a clean, responsive text UI.
