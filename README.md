@@ -1,4 +1,8 @@
 # 🃏 Blackjack
+[![Rust](https://img.shields.io/badge/Rust-2024-orange?logo=rust)](https://www.rust-lang.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/AsbestosSoup-dev/blackjack/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/AsbestosSoup-dev/blackjack/actions/workflows/ci.yml)
+[![OS Support](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-success)](#)
 
 A cross-platform, terminal-based multiplayer blackjack game written in **Rust**.  
 Play solo, with bots, or over LAN/WAN — all through a clean, responsive text UI.
@@ -407,7 +411,7 @@ cargo test core::hand
 
 ## 🧾 License
 
-MIT License - see `LICENSE` file
+MIT License - see [LICENSE](LICENSE) file
 
 ---
 

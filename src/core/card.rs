@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Suit {
@@ -20,7 +20,7 @@ impl std::fmt::Display for Suit {
             Suit::Clubs => "♣",
             Suit::Diamonds => "♦",
             Suit::Hearts => "♥",
-            Suit::Spades => "♠"
+            Suit::Spades => "♠",
         };
 
         f.write_str(s)
@@ -55,7 +55,9 @@ impl Rank {
 
     pub const fn all() -> [Rank; 13] {
         use Rank::*;
-        [Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace]
+        [
+            Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace,
+        ]
     }
 }
 
@@ -89,7 +91,7 @@ pub struct Card {
 
 impl Card {
     pub const fn new(rank: Rank, suit: Suit) -> Card {
-        Card { rank, suit, }
+        Card { rank, suit }
     }
 
     pub fn standard_deck() -> Vec<Self> {
