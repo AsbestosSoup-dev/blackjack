@@ -1,11 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
-pub enum BlackjackPayout {
-    Standard, // 3:2
-    Vegas,    // 6:5
-    Custom { numerator: u8, denominator: u8 },
-}
+use crate::core::payout::BlackjackPayout;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Rules {
@@ -26,7 +21,6 @@ pub struct Rules {
     pub perfect_pairs_enabled: bool,
     pub twenty_one_plus_3_enabled: bool,
     pub royal_match_enabled: bool,
-
     // high-variance side bets
     // pub lucky_ladies_enabled: bool,
     // pub bust_it_enabled: bool,
@@ -44,6 +38,6 @@ pub struct Rules {
     // pub kings_bounty_enabled: bool,
 
     // progressive jackpots
-    // pub caribbean_twenty_one_enabled: bool,
-    // pub blazing_sevens_enabled: bool,
+    // pub caribbean_21_enabled: bool,
+    // pub blazing_7s_enabled: bool,
 }
