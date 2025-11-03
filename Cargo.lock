@@ -363,6 +363,7 @@ dependencies = [
  "dirs",
  "hmac",
  "rand",
+ "rand_chacha",
  "ratatui",
  "rustls",
  "serde",
@@ -1310,6 +1311,7 @@ checksum = "d3022b5f1df60f26e1ffddd6c66e8aa15de382ae63b3a0c1bfc0e4d3e3f325cb"
 dependencies = [
  "ppv-lite86",
  "rand_core 0.9.3",
+ "serde",
 ]
 
 [[package]]

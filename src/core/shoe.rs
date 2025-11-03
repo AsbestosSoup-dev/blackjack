@@ -1,6 +1,8 @@
 use crate::core::card::Card;
 use crate::error::{ConfigError, ConfigResult, GameError, GameResult};
+use rand::SeedableRng;
 use rand::seq::SliceRandom;
+use rand_chacha::ChaCha8Rng;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -9,10 +11,11 @@ pub struct Shoe {
     top_position: usize,
     cut_position: usize,
     num_decks: u8,
+    rng: ChaCha8Rng,
 }
 
 impl Shoe {
-    pub fn new(num_decks: u8, cut_position: usize) -> ConfigResult<Self> {
+    pub fn new(num_decks: u8, cut_position: usize, seed: Option<u64>) -> ConfigResult<Self> {
         if num_decks == 0 {
             return Err(ConfigError::InvalidDecks(num_decks));
         }
@@ -23,7 +26,13 @@ impl Shoe {
         for _ in 0..num_decks {
             cards.extend(Card::standard_deck());
         }
-        cards.shuffle(&mut rand::rng());
+
+        let mut rng = match seed {
+            Some(s) => ChaCha8Rng::seed_from_u64(s),
+            None => ChaCha8Rng::from_os_rng(),
+        };
+
+        cards.shuffle(&mut rng);
 
         if 0 == cut_position || cut_position > total_cards {
             return Err(ConfigError::InvalidCutPosition(cut_position, total_cards));
@@ -34,6 +43,7 @@ impl Shoe {
             num_decks,
             top_position: 0,
             cut_position,
+            rng,
         })
     }
 
@@ -47,16 +57,8 @@ impl Shoe {
         Ok(card)
     }
 
-    pub fn peek(&self) -> GameResult<Card> {
-        if self.top_position >= self.cut_position {
-            return Err(GameError::ShoeNeedsReshuffling);
-        }
-
-        Ok(self.cards[self.top_position])
-    }
-
     pub fn shuffle(&mut self) {
-        self.cards.shuffle(&mut rand::rng());
+        self.cards.shuffle(&mut self.rng);
         self.top_position = 0
     }
 }
