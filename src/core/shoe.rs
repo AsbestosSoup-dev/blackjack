@@ -34,7 +34,7 @@ impl Shoe {
 
         cards.shuffle(&mut rng);
 
-        if 0 == cut_position || cut_position > total_cards {
+        if 0 == cut_position || cut_position >= total_cards {
             return Err(ConfigError::InvalidCutPosition(cut_position, total_cards));
         }
 
