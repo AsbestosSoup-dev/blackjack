@@ -34,7 +34,7 @@ impl Shoe {
 
         cards.shuffle(&mut rng);
 
-        if 0 == cut_position || cut_position >= total_cards {
+        if cut_position == 0 || cut_position > total_cards {
             return Err(ConfigError::InvalidCutPosition(cut_position, total_cards));
         }
 
@@ -60,5 +60,68 @@ impl Shoe {
     pub fn shuffle(&mut self) {
         self.cards.shuffle(&mut self.rng);
         self.top_position = 0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn creation_single_deck() {
+        let mut shoe = Shoe::new(1, 40, Some(42)).unwrap();
+        assert!(shoe.deal().is_ok());
+    }
+
+    #[test]
+    fn creation_invalid_decks() {
+        assert!(Shoe::new(0, 40, Some(42)).is_err());
+    }
+
+    #[test]
+    fn creation_invalid_cut_zero() {
+        assert!(Shoe::new(6, 0, Some(42)).is_err());
+    }
+
+    #[test]
+    fn creation_invalid_cut_too_high() {
+        assert!(Shoe::new(6, 313, Some(42)).is_err());
+    }
+
+    #[test]
+    fn cut_at_total_cards_valid() {
+        let shoe = Shoe::new(6, 312, Some(42));
+        assert!(shoe.is_ok());
+    }
+
+    #[test]
+    fn deals_until_cut() {
+        let mut shoe = Shoe::new(1, 10, Some(42)).unwrap();
+        for _ in 0..10 {
+            assert!(shoe.deal().is_ok());
+        }
+        assert!(shoe.deal().is_err());
+    }
+
+    #[test]
+    fn shuffle_resets() {
+        let mut shoe = Shoe::new(1, 10, Some(42)).unwrap();
+        for _ in 0..10 {
+            shoe.deal().unwrap();
+        }
+        assert!(shoe.deal().is_err());
+
+        shoe.shuffle();
+        assert!(shoe.deal().is_ok());
+    }
+
+    #[test]
+    fn deterministic_with_seed() {
+        let mut shoe1 = Shoe::new(1, 52, Some(123)).unwrap();
+        let mut shoe2 = Shoe::new(1, 52, Some(123)).unwrap();
+
+        for _ in 0..52 {
+            assert_eq!(shoe1.deal().unwrap(), shoe2.deal().unwrap());
+        }
     }
 }

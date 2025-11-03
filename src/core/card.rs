@@ -120,3 +120,33 @@ impl std::fmt::Display for Card {
         write!(f, "{}{}", self.rank, self.suit)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pip_values() {
+        assert_eq!(Card::new(Rank::Two, Suit::Spades).pip_value(), 2);
+        assert_eq!(Card::new(Rank::Ten, Suit::Spades).pip_value(), 10);
+        assert_eq!(Card::new(Rank::Jack, Suit::Spades).pip_value(), 10);
+        assert_eq!(Card::new(Rank::Queen, Suit::Spades).pip_value(), 10);
+        assert_eq!(Card::new(Rank::King, Suit::Spades).pip_value(), 10);
+        assert_eq!(Card::new(Rank::Ace, Suit::Spades).pip_value(), 1);
+    }
+
+    #[test]
+    fn standard_deck_size() {
+        let deck = Card::standard_deck();
+        assert_eq!(deck.len(), 52);
+    }
+
+    #[test]
+    fn standard_deck_uniqueness() {
+        let deck = Card::standard_deck();
+        let mut unique_cards = std::collections::HashSet::new();
+        for card in deck {
+            assert!(unique_cards.insert(card));
+        }
+    }
+}

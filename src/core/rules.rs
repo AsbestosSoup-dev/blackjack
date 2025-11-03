@@ -41,3 +41,31 @@ pub struct Rules {
     // pub caribbean_21_enabled: bool,
     // pub blazing_7s_enabled: bool,
 }
+
+impl Rules {
+    pub fn new() -> Self {
+        Self {
+            min_bet: 10,
+            max_bet: 500,
+            starting_credits: 1000,
+            blackjack_payout: BlackjackPayout::Standard,
+            num_decks: 6,
+            split_limit: 1,
+            dealer_hits_soft_17: false,
+            surrender_allowed: false,
+            resplit_aces_allowed: false,
+            hit_split_aces_allowed: false,
+            double_after_split_allowed: true,
+            insurance_enabled: false,
+            perfect_pairs_enabled: false,
+            twenty_one_plus_3_enabled: false,
+            royal_match_enabled: false,
+        }
+    }
+}
+
+impl Default for Rules {
+    fn default() -> Self {
+        Self::new()
+    }
+}
