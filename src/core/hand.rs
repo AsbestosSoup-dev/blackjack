@@ -21,18 +21,17 @@ impl Hand {
 
     pub fn value(&self) -> u8 {
         let mut total = 0;
-        let mut aces = 0;
+        let mut has_aces = false;
 
         for card in &self.cards {
             total += card.pip_value();
             if card.rank == Rank::Ace {
-                aces += 1;
+                has_aces = true;
             }
         }
 
-        while aces > 0 && total + 10 <= 21 {
+        if has_aces && total + 10 <= 21 {
             total += 10;
-            aces -= 1;
         }
 
         total
