@@ -47,17 +47,22 @@ impl Hand {
     }
 
     pub fn is_soft(&self) -> bool {
-        let mut total = 0;
-        let mut aces = 0;
+        let hand_value = self.value();
+        if hand_value > 21 {
+            return false;
+        }
+
+        let mut hard_total = 0u8;
+        let mut has_aces = false;
 
         for card in &self.cards {
-            total += card.pip_value();
+            hard_total += card.pip_value();
             if card.rank == Rank::Ace {
-                aces += 1;
+                has_aces = true;
             }
         }
 
-        aces > 0 && total + 10 <= 21
+        has_aces && hand_value != hard_total
     }
 }
 
