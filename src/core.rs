@@ -1,5 +1,5 @@
 mod card;
-mod hand;
+pub mod hand;
 mod payout;
 mod rules;
 mod shoe;
