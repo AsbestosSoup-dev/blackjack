@@ -122,13 +122,14 @@ cargo build --release
 
 ---
 
-## 🏗️ Architecture
+<details>
+<summary><h2>🏗️ Architecture</h2></summary>
 
 ### Technology Stack
 
 | Component | Technology | Notes |
 |-----------|-----------|-------|
-| **Core Logic** | `bevy_ecs 0.17` | Phase-based systems, entity component architecture |
+| **Core Logic** | Pure Rust state machine | Phase-based game progression with explicit state transitions |
 | **Networking** | `tokio 1.x`, `bincode 2.0` | Async TCP, minimal runtime features |
 | **UI** | `ratatui 0.29`, `crossterm` | Cross-platform terminal rendering |
 | **Logging** | `tracing 0.1` | Async-native structured logging with spans |
@@ -147,7 +148,7 @@ flowchart LR
 
     subgraph Server["Server (Always Running)"]
         Listener["TCP Listener\n(0.0.0.0:7777 or 127.0.0.1)"]
-        GameLoop["ECS Game Loop\n(bevy systems)"]
+        GameLoop["Game Loop\n(tick-based state machine)"]
         Broadcaster["Snapshot Broadcaster"]
         Discovery["UDP Discovery\n(multicast)"]
     end
@@ -168,12 +169,12 @@ flowchart LR
 - **UDP discovery**: LAN games auto-detected via multicast beacons
 - **TLS by default**: WAN-ready from day one
 
-### ECS Tick Cycle
+### Game Loop Tick Cycle
 
 ```
 1. Receive Network Events (client actions queued)
-2. Run Phase Systems (Lobby → Betting → Turns → Dealer → Payout)
-3. Update Resources (RNG, timers, round counter)
+2. Update Game State (process actions, advance phases)
+3. Apply Game Rules (blackjack logic, dealer AI)
 4. Build TableSnapshot DTO
 5. Broadcast to all connected clients
 6. Sleep until next tick (16ms target)
@@ -214,68 +215,7 @@ sequenceDiagram
     Note over Server: Next round begins
 ```
 
----
-
-## 📦 Dependencies
-
-### Core (Edition 2024)
-- **bevy_ecs 0.17**: Entity component system for game state
-- **tokio 1.x**: Async runtime (minimal features: `rt-multi-thread`, `net`, `sync`, `time`, `macros`)
-- **tracing 0.1 + tracing-subscriber 0.3**: Structured logging for async debugging
-
-### Serialization
-- **bincode 2.0**: Binary network protocol (explicit configuration)
-- **serde 1.x**: Serialization framework
-- **toml 0.9**: Human-readable configuration files
-- **uuid 1.x**: Player IDs (v7 time-ordered UUIDs)
-
-### UI
-- **ratatui 0.29**: Terminal UI framework (pre-1.0 but stable)
-- **crossterm 0.29**: Cross-platform terminal manipulation (re-exported by ratatui)
-
-### Security
-- **rustls 0.23**: Modern TLS 1.3 library
-- **tokio-rustls 0.26**: Async TLS integration
-- **argon2 0.5**: Password hashing (Argon2id variant)
-- **hmac 0.12 + sha3 0.10**: Session token authentication
-
-### Utilities
-- **rand 0.9**: RNG for card shuffling
-- **dirs 6**: Platform-specific config directories
-- **thiserror 2**: Structured error types
-- **anyhow 1**: Error propagation and context
-
----
-
-## ⚙️ Configuration
-
-### Game Rules (`~/.config/blackjack/config.toml`)
-
-```toml
-[game]
-min_bet = 10
-max_bet = 500
-starting_credits = 1000
-num_decks = 6
-dealer_hits_soft_17 = false
-
-[side_bets]
-insurance_enabled = false
-perfect_pairs_enabled = false
-twentyone_plus_three_enabled = false
-
-[network]
-mode = "Solo"  # Solo | LAN | WAN
-port = 7777
-password = ""  # Optional for WAN
-
-[display]
-theme = "default"  # default | dark | high-contrast
-
-[persistence]
-save_credits = false
-save_stats = false
-```
+</details>
 
 ---
 
@@ -330,9 +270,9 @@ src/
 │   ├── shoe.rs
 │   ├── rules.rs
 │   └── payout.rs
-├── engine/             # ECS systems
+├── engine/
 │   ├── game.rs
-│   ├── systems.rs
+│   ├── state.rs
 │   ├── bot.rs
 │   └── admin.rs
 ├── net/                # Networking
@@ -415,21 +355,7 @@ MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-## ✍️ Credits
-
-**Game Design & Development**: AsbestosSoup  
-**Architecture & Documentation**: Collaborative design with Claude (Anthropic)
-
-**Special Thanks**:
-- Rust community for excellent crates ecosystem
-- Bevy project for accessible ECS architecture
-- Ratatui maintainers for terminal UI framework
-
----
-
 ## 📞 Contact
 
 - **GitHub Issues**: Bug reports and feature requests
 - **Discussions**: Design feedback and gameplay suggestions
-
-**Note**: This is a learning project focused on Rust best practices, multiplayer networking, and production-quality architecture. Contributions welcome!

@@ -4,8 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-# ECS & Game Logic
-bevy_ecs = "0.17"
+# Game Logic
 rand = "0.9"
 rand_chacha = { version = "0.9.0", features = ["serde"]}
 
